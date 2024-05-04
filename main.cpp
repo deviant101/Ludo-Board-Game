@@ -10,43 +10,55 @@ int main() {
     // Create four rectangles representing clickable squares
     // Red Area
     sf::RectangleShape square1(sf::Vector2f(300, 300));
-    square1.setFillColor(sf::Color::Red);
+    square1.setFillColor(sf::Color(228,28,36,255));
     square1.setPosition(0, 0);
     sf::RectangleShape insideRed(sf::Vector2f(200, 200));
-    insideRed.setFillColor(sf::Color::White);
+    sf::Texture redTexture;
+    if (redTexture.loadFromFile("images/red_heart.png")) {
+        insideRed.setTexture(&redTexture);
+    }
     insideRed.setPosition(50, 50);
 
     // Green Area
     sf::RectangleShape square2(sf::Vector2f(300, 300));
-    square2.setFillColor(sf::Color::Green);
+    square2.setFillColor(sf::Color(98,180,70,255));
     square2.setPosition(450, 0);
     sf::RectangleShape insideGreen(sf::Vector2f(200, 200));
-    insideGreen.setFillColor(sf::Color::White);
+    sf::Texture greenTexture;
+    if (greenTexture.loadFromFile("images/green_spade.png")) {
+        insideGreen.setTexture(&greenTexture);
+    }
     insideGreen.setPosition(500, 50);
 
     // Blue Area
     sf::RectangleShape square3(sf::Vector2f(300, 300));
-    square3.setFillColor(sf::Color::Blue);
+    square3.setFillColor(sf::Color(30,112,185,255));
     square3.setPosition(0, 450);
     sf::RectangleShape insideBlue(sf::Vector2f(200, 200));
-    insideBlue.setFillColor(sf::Color::White);
+    sf::Texture blueTexture;
+    if (blueTexture.loadFromFile("images/blue_club.png")) {
+        insideBlue.setTexture(&blueTexture);
+    }
     insideBlue.setPosition(50, 500);
 
     // Yellow Area
     sf::RectangleShape square4(sf::Vector2f(300, 300));
-    square4.setFillColor(sf::Color::Yellow);
+    square4.setFillColor(sf::Color(254,205,7,255));
     square4.setPosition(450, 450);
     sf::RectangleShape insideYellow(sf::Vector2f(200, 200));
-    insideYellow.setFillColor(sf::Color::White);
+    sf::Texture yellowTexture;
+    if (yellowTexture.loadFromFile("images/yellow_diamond.png")) {
+        insideYellow.setTexture(&yellowTexture);
+    }
     insideYellow.setPosition(500, 500);
 
     // Center and Inside Center
     sf::RectangleShape center(sf::Vector2f(150, 150));
-    center.setFillColor(sf::Color::Black);
-    center.setPosition(300, 300);    
-    sf::RectangleShape insideCenter(sf::Vector2f(100, 100));
-    insideCenter.setFillColor(sf::Color::Magenta);
-    insideCenter.setPosition(325, 325);
+    sf::Texture centerTexture;
+    if (centerTexture.loadFromFile("images/center.png")) {
+        center.setTexture(&centerTexture);
+    }
+    center.setPosition(300, 300);
 
     // Create the squares
     sf::RectangleShape squares[52];
@@ -79,9 +91,27 @@ int main() {
             squares[i].setPosition(300, 250 - (i - 45) * 50);
         else if(i==51)
             squares[i].setPosition(350,0);
-            // squares[i].setFillColor(sf::Color::Blue);
-        
     }
+
+    // Starting points
+    
+    sf::Texture greenstop;
+    if (greenstop.loadFromFile("images/greenstop.gif")){
+        squares[1].setTexture(&greenstop);
+    }
+    sf::Texture redstop;
+    if (redstop.loadFromFile("images/redstop.gif")){
+        squares[40].setTexture(&redstop);
+    }
+    sf::Texture yellowstop;
+    if (yellowstop.loadFromFile("images/yellowstop.gif")){
+        squares[14].setTexture(&yellowstop);
+    }
+    sf::Texture bluestop;
+    if (bluestop.loadFromFile("images/bluestop.gif")){
+        squares[27].setTexture(&bluestop);
+    }
+    // squares[1].setFillColor(sf::Color::Green);
 
     sf::RectangleShape greenHome[5];
     drawHomeGrids(greenHome, "green", squares);
@@ -124,7 +154,6 @@ int main() {
         window.draw(square4);
 
         window.draw(center);
-        window.draw(insideCenter);
 
         for(int i = 0; i < 52; ++i){
             window.draw(squares[i]);
@@ -158,21 +187,17 @@ void drawHomeGrids(sf::RectangleShape *homeGrid, string color, sf::RectangleShap
         homeGrid[i].setOutlineThickness(2);
 
         if(color == "green"){
-            homeGrid[i].setFillColor(sf::Color::Green);
+            homeGrid[i].setFillColor(sf::Color(98,180,70,255));
             homeGrid[i].setPosition(350, 50 + (i*50));
-            grids[1].setFillColor(sf::Color::Green);
         }else if(color == "red"){
-            homeGrid[i].setFillColor(sf::Color::Red);
+            homeGrid[i].setFillColor(sf::Color(228,28,36,255));
             homeGrid[i].setPosition(50 + (i*50), 350);
-            grids[14].setFillColor(sf::Color::Yellow);
         }else if(color == "blue"){
-            homeGrid[i].setFillColor(sf::Color::Blue);
+            homeGrid[i].setFillColor(sf::Color(30,112,185,255));
             homeGrid[i].setPosition(350, 650 - (i*50));
-            grids[27].setFillColor(sf::Color::Blue);
         }else if(color == "yellow"){
-            homeGrid[i].setFillColor(sf::Color::Yellow);
+            homeGrid[i].setFillColor(sf::Color(254,205,7,255));
             homeGrid[i].setPosition(650 - (i*50), 350);
-            grids[40].setFillColor(sf::Color::Red);
         }
     }
 }
