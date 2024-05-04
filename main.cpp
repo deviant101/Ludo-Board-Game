@@ -36,23 +36,37 @@ int main() {
     insideCenter.setPosition(325, 325);
 
     // Create the squares
-    sf::RectangleShape squares[18];
-    for(int i = 0; i < 6; ++i) {
-        for(int j = 0; j < 3; ++j) {
-            int index = i * 3 + j;
-            squares[index].setSize(sf::Vector2f(50, 50));
-            
-            if(find(y1_home.begin(), y1_home.end(), index) != y1_home.end()){
-                squares[index].setFillColor(sf::Color::Green);
-            }else{
-                squares[index].setFillColor(sf::Color::White);
-            }
-
-            // squares[index].setFillColor(sf::Color::White);
-            squares[index].setPosition(300 + (50 * j), 50 * i);
-            squares[index].setOutlineThickness(2);
-            squares[index].setOutlineColor(sf::Color::Black);
-            window.draw(squares[index]);
+    sf::RectangleShape squares[52];
+    for(int i = 0; i < 52; ++i) {
+        squares[i].setSize(sf::Vector2f(50, 50));
+        squares[i].setOutlineColor(sf::Color::Black);
+        squares[i].setOutlineThickness(2);
+        squares[i].setFillColor(sf::Color::White);
+        if(i<6){
+            squares[i].setPosition(400,(i*50));
+        }else if(i<12){
+            squares[i].setPosition(450 + ((i - 6) * 50), 300);
+        }else if(i==12){
+            squares[i].setPosition(700, 350);
+        }else if(i<19){
+            squares[i].setPosition(750 - (i - 12) * 50, 400);
+        }else if(i<25){
+            squares[i].setPosition(400, 400 + (i - 18) * 50);
+        }else if(i==25){
+            squares[i].setPosition(350, 700);
+        }else if(i<32){
+            squares[i].setPosition(300, 750 - (i - 25) * 50);
+        }else if(i<38){
+            squares[i].setPosition(300 - (i - 31) * 50, 400);
+        }else if(i==38){
+            squares[i].setPosition(0,350);
+        }else if(i<45){
+            squares[i].setPosition(-50 + (i - 38) * 50, 300);
+        }else if(i<51){
+            squares[i].setPosition(300, 250 - (i - 45) * 50);
+        }else if(i==51){
+            squares[i].setPosition(350,0);
+            // squares[i].setFillColor(sf::Color::Blue);
         }
     }
 
@@ -89,7 +103,7 @@ int main() {
         window.draw(center);
         window.draw(insideCenter);
 
-        for(int i = 0; i < 18; ++i) {
+        for(int i = 0; i < 52; ++i){
             window.draw(squares[i]);
         }
 
