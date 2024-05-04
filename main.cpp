@@ -2,10 +2,7 @@
 #include <iostream>
 using namespace std;
 
-    vector<int> y1_home = {4,5,7,10,13,16};
-    vector<int> y2_home = {1,4,7,10,13,};
-    vector<int> x1_home = {1,7,8,9,12,13};
-    vector<int> x2_home = {1,4,7,10,13};
+void drawHomeGrids(sf::RectangleShape *homeGrid, string color, sf::RectangleShape *grids);
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(750, 750), "Ludo-Board Game");
@@ -70,6 +67,16 @@ int main() {
         }
     }
 
+    sf::RectangleShape greenHome[5];
+    drawHomeGrids(greenHome, "green", squares);
+    sf::RectangleShape redHome[5];
+    drawHomeGrids(redHome, "red",squares);
+    sf::RectangleShape blueHome[5];
+    drawHomeGrids(blueHome, "blue",squares);
+    sf::RectangleShape yellowHome[5];
+    drawHomeGrids(yellowHome, "yellow",squares);
+
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -107,8 +114,44 @@ int main() {
             window.draw(squares[i]);
         }
 
+        for(int i = 0; i < 5; ++i){
+            window.draw(greenHome[i]);
+            window.draw(redHome[i]);
+            window.draw(blueHome[i]);
+            window.draw(yellowHome[i]);
+        }
+
         window.display();
     }
 
     return 0;
+}
+
+void drawHomeGrids(sf::RectangleShape *homeGrid, string color, sf::RectangleShape *grids){
+    cout<<color<<endl;
+
+    for(int i=0; i<5; ++i){
+        
+        homeGrid[i].setSize(sf::Vector2f(50, 50));
+        homeGrid[i].setOutlineColor(sf::Color::Black);
+        homeGrid[i].setOutlineThickness(2);
+
+        if(color == "green"){
+            homeGrid[i].setFillColor(sf::Color::Green);
+            homeGrid[i].setPosition(350, 50 + (i*50));
+            grids[1].setFillColor(sf::Color::Green);
+        }else if(color == "red"){
+            homeGrid[i].setFillColor(sf::Color::Red);
+            homeGrid[i].setPosition(50 + (i*50), 350);
+            grids[14].setFillColor(sf::Color::Yellow);
+        }else if(color == "blue"){
+            homeGrid[i].setFillColor(sf::Color::Blue);
+            homeGrid[i].setPosition(350, 650 - (i*50));
+            grids[27].setFillColor(sf::Color::Blue);
+        }else if(color == "yellow"){
+            homeGrid[i].setFillColor(sf::Color::Yellow);
+            homeGrid[i].setPosition(650 - (i*50), 350);
+            grids[40].setFillColor(sf::Color::Red);
+        }
+    }
 }
