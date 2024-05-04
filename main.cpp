@@ -8,26 +8,42 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(750, 750), "Ludo-Board Game");
 
     // Create four rectangles representing clickable squares
+    // Red Area
     sf::RectangleShape square1(sf::Vector2f(300, 300));
     square1.setFillColor(sf::Color::Red);
     square1.setPosition(0, 0);
+    sf::RectangleShape insideRed(sf::Vector2f(200, 200));
+    insideRed.setFillColor(sf::Color::White);
+    insideRed.setPosition(50, 50);
 
+    // Green Area
     sf::RectangleShape square2(sf::Vector2f(300, 300));
     square2.setFillColor(sf::Color::Green);
     square2.setPosition(450, 0);
+    sf::RectangleShape insideGreen(sf::Vector2f(200, 200));
+    insideGreen.setFillColor(sf::Color::White);
+    insideGreen.setPosition(500, 50);
 
+    // Blue Area
     sf::RectangleShape square3(sf::Vector2f(300, 300));
     square3.setFillColor(sf::Color::Blue);
     square3.setPosition(0, 450);
+    sf::RectangleShape insideBlue(sf::Vector2f(200, 200));
+    insideBlue.setFillColor(sf::Color::White);
+    insideBlue.setPosition(50, 500);
 
+    // Yellow Area
     sf::RectangleShape square4(sf::Vector2f(300, 300));
     square4.setFillColor(sf::Color::Yellow);
     square4.setPosition(450, 450);
+    sf::RectangleShape insideYellow(sf::Vector2f(200, 200));
+    insideYellow.setFillColor(sf::Color::White);
+    insideYellow.setPosition(500, 500);
 
+    // Center and Inside Center
     sf::RectangleShape center(sf::Vector2f(150, 150));
     center.setFillColor(sf::Color::Black);
-    center.setPosition(300, 300);
-
+    center.setPosition(300, 300);    
     sf::RectangleShape insideCenter(sf::Vector2f(100, 100));
     insideCenter.setFillColor(sf::Color::Magenta);
     insideCenter.setPosition(325, 325);
@@ -39,32 +55,32 @@ int main() {
         squares[i].setOutlineColor(sf::Color::Black);
         squares[i].setOutlineThickness(2);
         squares[i].setFillColor(sf::Color::White);
-        if(i<6){
+        if(i<6)
             squares[i].setPosition(400,(i*50));
-        }else if(i<12){
+        else if(i<12)
             squares[i].setPosition(450 + ((i - 6) * 50), 300);
-        }else if(i==12){
+        else if(i==12)
             squares[i].setPosition(700, 350);
-        }else if(i<19){
+        else if(i<19)
             squares[i].setPosition(750 - (i - 12) * 50, 400);
-        }else if(i<25){
+        else if(i<25)
             squares[i].setPosition(400, 400 + (i - 18) * 50);
-        }else if(i==25){
+        else if(i==25)
             squares[i].setPosition(350, 700);
-        }else if(i<32){
+        else if(i<32)
             squares[i].setPosition(300, 750 - (i - 25) * 50);
-        }else if(i<38){
+        else if(i<38)
             squares[i].setPosition(300 - (i - 31) * 50, 400);
-        }else if(i==38){
+        else if(i==38)
             squares[i].setPosition(0,350);
-        }else if(i<45){
+        else if(i<45)
             squares[i].setPosition(-50 + (i - 38) * 50, 300);
-        }else if(i<51){
+        else if(i<51)
             squares[i].setPosition(300, 250 - (i - 45) * 50);
-        }else if(i==51){
+        else if(i==51)
             squares[i].setPosition(350,0);
             // squares[i].setFillColor(sf::Color::Blue);
-        }
+        
     }
 
     sf::RectangleShape greenHome[5];
@@ -120,6 +136,11 @@ int main() {
             window.draw(blueHome[i]);
             window.draw(yellowHome[i]);
         }
+
+        window.draw(insideRed);
+        window.draw(insideYellow);
+        window.draw(insideGreen);
+        window.draw(insideBlue);
 
         window.display();
     }
