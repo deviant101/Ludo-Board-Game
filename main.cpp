@@ -8,11 +8,109 @@ sf::RectangleShape greenHome[5];
 sf::RectangleShape redHome[5];
 sf::RectangleShape blueHome[5];
 sf::RectangleShape yellowHome[5];
+sf::Font mainFont;
+sf::Font secFont;
 
-void drawHomeGrids(sf::RectangleShape *homeGrid, string color, sf::RectangleShape *grids);
+int NO_PLAYERS;
+int NO_TOKENS;
 
-int main() {
+
+void drawHomeGrids(sf::RectangleShape *homeGrid, string color);
+
+void inputWindow(){
+
+    sf::Text Title;
+    Title.setFont(mainFont);
+    Title.setString("LUDO BOARD");
+    Title.setCharacterSize(75);
+    Title.setFillColor(sf::Color::White);
+    Title.setPosition(40, 120);
+
+    sf::Text printText;
+    printText.setFont(secFont);
+    printText.setString("No of Players");
+    printText.setCharacterSize(40);
+    printText.setFillColor(sf::Color::White);
+    printText.setPosition(140,350);
+
+    sf::RenderWindow window(sf::VideoMode(625, 900), "Ludo-Board Game");
+    window.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - window.getSize().x / 2, sf::VideoMode::getDesktopMode().height / 2 - window.getSize().y / 2));
+    sf::RectangleShape Background(sf::Vector2f(625, 900));
+    sf::Texture tex;
+    if (tex.loadFromFile("images/window-1.jpg")) {
+        Background.setTexture(&tex);
+    }
+    Background.setPosition(0, 0);
+
+    // window.display();
+    int inputflag=0;
+
+    sf::Text inputField;
+    inputField.setFont(secFont);
+    inputField.setCharacterSize(80);
+    inputField.setFillColor(sf::Color::White);
+    inputField.setPosition(275,450);
+    string input;
+
+    while(window.isOpen()){
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+            else if (event.type == sf::Event::TextEntered) {
+                if (event.text.unicode < 128) {
+                    if (event.text.unicode == 8 && !input.empty()) { // Backspace
+                        input.pop_back();
+                    }else if (event.text.unicode == 13) { // Enter
+                        if(inputflag==0){
+                            NO_PLAYERS = stoi(input);
+                            if(NO_PLAYERS<2 || NO_PLAYERS>4){
+                                input.clear();
+                                inputField.setString("");
+                                continue;
+                            }
+                            input.clear();
+                            inputflag=1;
+                            cout<<"No of Player: "<<NO_PLAYERS<<endl;
+                            printText.setString("No of Tokens");
+                            printText.setPosition(160,350);
+                        }else if(inputflag==1){
+                            NO_TOKENS = stoi(input);
+                            if(NO_TOKENS<1 || NO_TOKENS>4){
+                                input.clear();
+                                inputField.setString("");
+                                continue;
+                            }
+                            input.clear();
+                            cout<<"No of Tokens: "<<NO_TOKENS<<endl;
+                            window.close();
+                        }
+                    }
+                    else{
+                        input += static_cast<char>(event.text.unicode);
+                    }
+                    inputField.setString(input);
+                }
+            }
+        }
+        window.clear(sf::Color::White);
+        window.draw(Background);
+        window.draw(Title);
+        window.draw(printText);
+        window.draw(inputField);
+        window.display();
+    }
+}
+
+int main(){
+
+    mainFont.loadFromFile("fonts/SalvarRegular-gxwoP.ttf");
+    secFont.loadFromFile("fonts/AAbsoluteEmpire-EaXpg.ttf");
+    
+    inputWindow();
+
     sf::RenderWindow window(sf::VideoMode(750, 750), "Ludo-Board Game");
+    window.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - window.getSize().x / 2, sf::VideoMode::getDesktopMode().height / 2 - window.getSize().y / 2));
 
     // Create four rectangles representing clickable playGroundGrids
     // Red Area
@@ -117,16 +215,10 @@ int main() {
         playGroundGrids[27].setTexture(&bluestop);
     }
 
-    drawHomeGrids(greenHome, "green", playGroundGrids);
-    drawHomeGrids(redHome, "red",playGroundGrids);
-    drawHomeGrids(blueHome, "blue",playGroundGrids);
-    drawHomeGrids(yellowHome, "yellow",playGroundGrids);
-
-    // sf::Texture token;
-    // if(token.loadFromFile("images/diamond_tkn.png")){
-    //     yellowHome[3].setTexture(&token);
-    // }
-
+    drawHomeGrids(greenHome, "green");
+    drawHomeGrids(redHome, "red");
+    drawHomeGrids(blueHome, "blue");
+    drawHomeGrids(yellowHome, "yellow");
 
     while (window.isOpen()) {
         sf::Event event;
@@ -182,8 +274,7 @@ int main() {
     return 0;
 }
 
-void drawHomeGrids(sf::RectangleShape *homeGrid, string color, sf::RectangleShape *grids){
-    cout<<color<<endl;
+void drawHomeGrids(sf::RectangleShape *homeGrid, string color){
 
     for(int i=0; i<5; ++i){
         
