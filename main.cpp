@@ -2,55 +2,62 @@
 #include <iostream>
 using namespace std;
 
+// Create the playGroundGrids
+sf::RectangleShape playGroundGrids[52];
+sf::RectangleShape greenHome[5];
+sf::RectangleShape redHome[5];
+sf::RectangleShape blueHome[5];
+sf::RectangleShape yellowHome[5];
+
 void drawHomeGrids(sf::RectangleShape *homeGrid, string color, sf::RectangleShape *grids);
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(750, 750), "Ludo-Board Game");
 
-    // Create four rectangles representing clickable squares
+    // Create four rectangles representing clickable playGroundGrids
     // Red Area
-    sf::RectangleShape square1(sf::Vector2f(300, 300));
-    square1.setFillColor(sf::Color(228,28,36,255));
-    square1.setPosition(0, 0);
-    sf::RectangleShape insideRed(sf::Vector2f(200, 200));
+    sf::RectangleShape Heart(sf::Vector2f(300, 300));
+    Heart.setFillColor(sf::Color(228,28,36,255));
+    Heart.setPosition(0, 0);
+    sf::RectangleShape heartSym(sf::Vector2f(200, 200));
     sf::Texture redTexture;
     if (redTexture.loadFromFile("images/red_heart.png")) {
-        insideRed.setTexture(&redTexture);
+        heartSym.setTexture(&redTexture);
     }
-    insideRed.setPosition(50, 50);
+    heartSym.setPosition(50, 50);
 
     // Green Area
-    sf::RectangleShape square2(sf::Vector2f(300, 300));
-    square2.setFillColor(sf::Color(98,180,70,255));
-    square2.setPosition(450, 0);
-    sf::RectangleShape insideGreen(sf::Vector2f(200, 200));
+    sf::RectangleShape Spade(sf::Vector2f(300, 300));
+    Spade.setFillColor(sf::Color(98,180,70,255));
+    Spade.setPosition(450, 0);
+    sf::RectangleShape spadeSym(sf::Vector2f(200, 200));
     sf::Texture greenTexture;
     if (greenTexture.loadFromFile("images/green_spade.png")) {
-        insideGreen.setTexture(&greenTexture);
+        spadeSym.setTexture(&greenTexture);
     }
-    insideGreen.setPosition(500, 50);
+    spadeSym.setPosition(500, 50);
 
     // Blue Area
-    sf::RectangleShape square3(sf::Vector2f(300, 300));
-    square3.setFillColor(sf::Color(30,112,185,255));
-    square3.setPosition(0, 450);
-    sf::RectangleShape insideBlue(sf::Vector2f(200, 200));
+    sf::RectangleShape Club(sf::Vector2f(300, 300));
+    Club.setFillColor(sf::Color(30,112,185,255));
+    Club.setPosition(0, 450);
+    sf::RectangleShape clubSym(sf::Vector2f(200, 200));
     sf::Texture blueTexture;
     if (blueTexture.loadFromFile("images/blue_club.png")) {
-        insideBlue.setTexture(&blueTexture);
+        clubSym.setTexture(&blueTexture);
     }
-    insideBlue.setPosition(50, 500);
+    clubSym.setPosition(50, 500);
 
     // Yellow Area
-    sf::RectangleShape square4(sf::Vector2f(300, 300));
-    square4.setFillColor(sf::Color(254,205,7,255));
-    square4.setPosition(450, 450);
-    sf::RectangleShape insideYellow(sf::Vector2f(200, 200));
+    sf::RectangleShape Diamond(sf::Vector2f(300, 300));
+    Diamond.setFillColor(sf::Color(254,205,7,255));
+    Diamond.setPosition(450, 450);
+    sf::RectangleShape diamondSym(sf::Vector2f(200, 200));
     sf::Texture yellowTexture;
     if (yellowTexture.loadFromFile("images/yellow_diamond.png")) {
-        insideYellow.setTexture(&yellowTexture);
+        diamondSym.setTexture(&yellowTexture);
     }
-    insideYellow.setPosition(500, 500);
+    diamondSym.setPosition(500, 500);
 
     // Center and Inside Center
     sf::RectangleShape center(sf::Vector2f(150, 150));
@@ -60,67 +67,65 @@ int main() {
     }
     center.setPosition(300, 300);
 
-    // Create the squares
-    sf::RectangleShape squares[52];
     for(int i = 0; i < 52; ++i) {
-        squares[i].setSize(sf::Vector2f(50, 50));
-        squares[i].setOutlineColor(sf::Color::Black);
-        squares[i].setOutlineThickness(2);
-        squares[i].setFillColor(sf::Color::White);
+        playGroundGrids[i].setSize(sf::Vector2f(50, 50));
+        playGroundGrids[i].setOutlineColor(sf::Color::Black);
+        playGroundGrids[i].setOutlineThickness(2);
+        playGroundGrids[i].setFillColor(sf::Color::White);
         if(i<6)
-            squares[i].setPosition(400,(i*50));
+            playGroundGrids[i].setPosition(400,(i*50));
         else if(i<12)
-            squares[i].setPosition(450 + ((i - 6) * 50), 300);
+            playGroundGrids[i].setPosition(450 + ((i - 6) * 50), 300);
         else if(i==12)
-            squares[i].setPosition(700, 350);
+            playGroundGrids[i].setPosition(700, 350);
         else if(i<19)
-            squares[i].setPosition(750 - (i - 12) * 50, 400);
+            playGroundGrids[i].setPosition(750 - (i - 12) * 50, 400);
         else if(i<25)
-            squares[i].setPosition(400, 400 + (i - 18) * 50);
+            playGroundGrids[i].setPosition(400, 400 + (i - 18) * 50);
         else if(i==25)
-            squares[i].setPosition(350, 700);
+            playGroundGrids[i].setPosition(350, 700);
         else if(i<32)
-            squares[i].setPosition(300, 750 - (i - 25) * 50);
+            playGroundGrids[i].setPosition(300, 750 - (i - 25) * 50);
         else if(i<38)
-            squares[i].setPosition(300 - (i - 31) * 50, 400);
+            playGroundGrids[i].setPosition(300 - (i - 31) * 50, 400);
         else if(i==38)
-            squares[i].setPosition(0,350);
+            playGroundGrids[i].setPosition(0,350);
         else if(i<45)
-            squares[i].setPosition(-50 + (i - 38) * 50, 300);
+            playGroundGrids[i].setPosition(-50 + (i - 38) * 50, 300);
         else if(i<51)
-            squares[i].setPosition(300, 250 - (i - 45) * 50);
+            playGroundGrids[i].setPosition(300, 250 - (i - 45) * 50);
         else if(i==51)
-            squares[i].setPosition(350,0);
+            playGroundGrids[i].setPosition(350,0);
     }
 
     // Starting points
     
     sf::Texture greenstop;
     if (greenstop.loadFromFile("images/greenstop.gif")){
-        squares[1].setTexture(&greenstop);
+        playGroundGrids[1].setTexture(&greenstop);
     }
     sf::Texture redstop;
     if (redstop.loadFromFile("images/redstop.gif")){
-        squares[40].setTexture(&redstop);
+        playGroundGrids[40].setTexture(&redstop);
     }
     sf::Texture yellowstop;
     if (yellowstop.loadFromFile("images/yellowstop.gif")){
-        squares[14].setTexture(&yellowstop);
+        playGroundGrids[14].setTexture(&yellowstop);
     }
     sf::Texture bluestop;
     if (bluestop.loadFromFile("images/bluestop.gif")){
-        squares[27].setTexture(&bluestop);
+        playGroundGrids[27].setTexture(&bluestop);
     }
-    // squares[1].setFillColor(sf::Color::Green);
 
-    sf::RectangleShape greenHome[5];
-    drawHomeGrids(greenHome, "green", squares);
-    sf::RectangleShape redHome[5];
-    drawHomeGrids(redHome, "red",squares);
-    sf::RectangleShape blueHome[5];
-    drawHomeGrids(blueHome, "blue",squares);
-    sf::RectangleShape yellowHome[5];
-    drawHomeGrids(yellowHome, "yellow",squares);
+    drawHomeGrids(greenHome, "green", playGroundGrids);
+    drawHomeGrids(redHome, "red",playGroundGrids);
+    drawHomeGrids(blueHome, "blue",playGroundGrids);
+    drawHomeGrids(yellowHome, "yellow",playGroundGrids);
+
+    // sf::Texture token;
+    // if(token.loadFromFile("images/diamond_tkn.png")){
+    //     yellowHome[3].setTexture(&token);
+    // }
 
 
     while (window.isOpen()) {
@@ -130,15 +135,15 @@ int main() {
                 window.close();
             else if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    // Check if the mouse click is within any of the squares
+                    // Check if the mouse click is within any of the playGroundGrids
                     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                    if (square1.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    if (Heart.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         cout << "Square 1 clicked!" << endl;
-                    } else if (square2.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    } else if (Spade.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         cout << "Square 2 clicked!" << endl;
-                    } else if (square3.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    } else if (Club.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         cout << "Square 3 clicked!" << endl;
-                    } else if (square4.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                    } else if (Diamond.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         cout << "Square 4 clicked!" << endl;
                     }
                 }
@@ -147,16 +152,16 @@ int main() {
 
         window.clear(sf::Color::White);
 
-        // Draw the squares
-        window.draw(square1);
-        window.draw(square2);
-        window.draw(square3);
-        window.draw(square4);
+        // Draw the playGroundGrids
+        window.draw(Heart);
+        window.draw(Spade);
+        window.draw(Club);
+        window.draw(Diamond);
 
         window.draw(center);
 
         for(int i = 0; i < 52; ++i){
-            window.draw(squares[i]);
+            window.draw(playGroundGrids[i]);
         }
 
         for(int i = 0; i < 5; ++i){
@@ -166,10 +171,10 @@ int main() {
             window.draw(yellowHome[i]);
         }
 
-        window.draw(insideRed);
-        window.draw(insideYellow);
-        window.draw(insideGreen);
-        window.draw(insideBlue);
+        window.draw(heartSym);
+        window.draw(diamondSym);
+        window.draw(spadeSym);
+        window.draw(clubSym);
 
         window.display();
     }
