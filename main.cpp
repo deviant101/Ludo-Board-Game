@@ -1,5 +1,8 @@
+// #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <bits/stdc++.h>
+#include "Player.cpp"
 using namespace std;
 
 // Create the playGroundGrids
@@ -15,7 +18,13 @@ int NO_PLAYERS;
 int NO_TOKENS;
 
 
+int *playerTurn;
+
+Player *P1;
+
+
 void drawHomeGrids(sf::RectangleShape *homeGrid, string color);
+void initializeEssentials();
 
 void inputWindow(){
 
@@ -72,6 +81,8 @@ void inputWindow(){
                             input.clear();
                             inputflag=1;
                             cout<<"No of Player: "<<NO_PLAYERS<<endl;
+                            
+                            // initializeEssentials();
                             printText.setString("No of Tokens");
                             printText.setPosition(160,350);
                         }else if(inputflag==1){
@@ -104,10 +115,14 @@ void inputWindow(){
 
 int main(){
 
+    srand(time(0));
     mainFont.loadFromFile("fonts/SalvarRegular-gxwoP.ttf");
     secFont.loadFromFile("fonts/AAbsoluteEmpire-EaXpg.ttf");
     
     inputWindow();
+    P1 = new Player;
+    P1->initializePlayer("Red",NO_TOKENS,redHome);
+    P1->playerDetails();
 
     sf::RenderWindow window(sf::VideoMode(750, 750), "Ludo-Board Game");
     window.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - window.getSize().x / 2, sf::VideoMode::getDesktopMode().height / 2 - window.getSize().y / 2));
@@ -295,5 +310,16 @@ void drawHomeGrids(sf::RectangleShape *homeGrid, string color){
             homeGrid[i].setFillColor(sf::Color(254,205,7,255));
             homeGrid[i].setPosition(650 - (i*50), 350);
         }
+    }
+}
+
+void initializeEssentials(){
+    playerTurn = new int[NO_PLAYERS];
+    for(int i=0; i<NO_PLAYERS; ++i){
+        playerTurn[i] = -1;
+    }
+
+    for(int i=0; i<NO_PLAYERS; ++i){
+        cout<<playerTurn[i]<<" ";
     }
 }
