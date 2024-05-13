@@ -10,22 +10,27 @@ class Player{
         int numTokens;          // Number of tokens for each player
         int *tokenPosition;     // Store the position of each token
         int *tokenDistance;     // Store the distance of each token from the start
+        int startingPoint;
+        bool continue_running;  //this will be used as mutex for the player self
+
         vector<int> diceValues;  // Store the current dice rolls for the player
 
         sf::RectangleShape *homeGrids;
 
-        void initializePlayer(string color, int numTkn, sf::RectangleShape *hmGrids){
+        void initializePlayer(string color, int numTkn, int start, sf::RectangleShape *hmGrids){
             this->color = color;
             numTurns = 0;
             killCount = 0;
             numTokens = numTkn;
             tokenPosition = new int[numTokens];
             tokenDistance = new int[numTokens];
+            startingPoint = start;
             
             for(int i = 0; i < numTokens; i++){
                 this->tokenPosition[i] = -1;
                 this->tokenDistance[i] = 0;
             }
+            continue_running = true;
             
             homeGrids = hmGrids;
         }
@@ -33,7 +38,8 @@ class Player{
         void playerDetails(){
             cout<<color<<endl
                 <<numTurns<<endl
-                <<numTokens<<endl;
+                <<killCount<<endl
+                <<startingPoint<<endl;
             
             for(int i=0; i<numTokens; ++i)
                 cout<<tokenPosition[i]<<" "<<tokenDistance[i]<<endl;

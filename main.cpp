@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <bits/stdc++.h>
+#include <semaphore.h>
 #include "Player.cpp"
 using namespace std;
 
@@ -21,12 +22,17 @@ sf::Font secFont;
 
 int NO_PLAYERS;
 int NO_TOKENS;
+int Cycle = 0;
 
 Player *PLAYERS;
+
+pthread_mutex_t turnMutex;
 
 void inputWindow();
 void drawHomeGrids(sf::RectangleShape *homeGrid, string color);
 void initialize();
+void *turn(void* arg);
+void *MasterThread(void*);
 
 int main(){
 
@@ -158,6 +164,15 @@ int main(){
     drawHomeGrids(blueHome, "blue");
     drawHomeGrids(yellowHome, "yellow");
 
+    // Create threads for each player
+    pthread_t playerThreads[NO_PLAYERS];
+    for (int i = 0; i < NO_PLAYERS; ++i){
+        int* value = new int(i);
+        pthread_create(&playerThreads[i], NULL, turn, value);
+    }
+    pthread_t masterThreadId;
+    pthread_create(&masterThreadId, NULL, MasterThread, NULL);
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -207,9 +222,12 @@ int main(){
         window.draw(diamondSym);
         window.draw(spadeSym);
         window.draw(clubSym);
-
+        
         window.display();
     }
+    // Join the threads
+    for (int i = 0; i < NO_PLAYERS; ++i)
+        pthread_join(playerThreads[i], NULL);
 
     return 0;
 }
@@ -328,13 +346,40 @@ void inputWindow(){
 void initialize(){
     PLAYERS = new Player[NO_PLAYERS];
     string colors[4] = {"Red", "Green", "Blue", "Yellow"};
+    int starts[4] = {40, 1, 27, 14};
     for(int i=0; i<NO_PLAYERS; ++i){
-        PLAYERS[i].initializePlayer(colors[i], NO_TOKENS, playerHomes[i]);
+        PLAYERS[i].initializePlayer(colors[i], NO_TOKENS, starts[i], playerHomes[i]);
     }
 
-    for(int i=0; i<NO_PLAYERS; ++i){
-        cout<<endl;
-        PLAYERS[i].playerDetails();
+    // for(int i=0; i<NO_PLAYERS; ++i){
+    //     cout<<endl;
+    //     PLAYERS[i].playerDetails();
+    // }
+}
+void* turn(void* arg){
+    int player_id = *((int*)arg);
+    delete (int*)arg;
+    while(true){
+        while(PLAYERS[player_id].continue_running){
+            PLAYERS[player_id].continue_running = false;    //blocking self untill next cycle turn
+            pthread_mutex_lock(&turnMutex);
+            while(PLAYERS[player_id].throwDice());
+            PLAYERS[player_id].playerDetails();
+            Cycle++;
+            pthread_mutex_unlock(&turnMutex);
+        }
     }
+    return NULL;
+}
 
+void *MasterThread(void*){
+    while(true){
+        if(Cycle==4){
+            Cycle=0;
+            cout<<"Cycle Completed"<<endl;
+            for(int i=0; i<NO_PLAYERS; ++i)
+                PLAYERS[i].continue_running = true;
+        }
+    }
+    return NULL;
 }
