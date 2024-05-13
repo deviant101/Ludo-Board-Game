@@ -12,6 +12,8 @@ class Player{
         int *tokenDistance;     // Store the distance of each token from the start
         int startingPoint;
         bool continue_running;  //this will be used as mutex for the player self
+        sf::Texture tokenTexture;
+        sf::Sprite tokenSprite;
 
         vector<int> diceValues;  // Store the current dice rolls for the player
 
@@ -33,6 +35,20 @@ class Player{
             continue_running = true;
             
             homeGrids = hmGrids;
+
+            if(color == "Red"){
+                tokenTexture.loadFromFile("images/heart_tkn.png");
+            }
+            else if(color == "Green"){
+                tokenTexture.loadFromFile("images/spade_tkn.png");
+            }
+            else if(color == "Blue"){
+                tokenTexture.loadFromFile("images/club_tkn.png");
+            }
+            else if(color == "Yellow"){
+                tokenTexture.loadFromFile("images/diamond_tkn.png");
+            }
+            homeGrids[0].setTexture(&tokenTexture);
         }
 
         void playerDetails(){

@@ -15,7 +15,7 @@ sf::RectangleShape yellowHome[5];
 sf::RectangleShape DICE(sf::Vector2f(150,150));
 sf::RectangleShape playerturn(sf::Vector2f(90,90));
 
-sf::RectangleShape *playerHomes[4]={greenHome, redHome, blueHome, yellowHome};
+sf::RectangleShape *playerHomes[4]={redHome, greenHome, blueHome, yellowHome};
 
 sf::Font mainFont;
 sf::Font secFont;
