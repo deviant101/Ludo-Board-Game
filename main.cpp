@@ -98,7 +98,6 @@ int main(){
     //     DICE.setTexture(&diceTexture);
     // }
 
-    playerturn.setFillColor(sf::Color::Black);
     playerturn.setPosition(880, 250);
 
     // Center and Inside Center
@@ -350,11 +349,6 @@ void initialize(){
     for(int i=0; i<NO_PLAYERS; ++i){
         PLAYERS[i].initializePlayer(colors[i], NO_TOKENS, starts[i], playerHomes[i]);
     }
-
-    // for(int i=0; i<NO_PLAYERS; ++i){
-    //     cout<<endl;
-    //     PLAYERS[i].playerDetails();
-    // }
 }
 void* turn(void* arg){
     int player_id = *((int*)arg);
@@ -363,8 +357,11 @@ void* turn(void* arg){
         while(PLAYERS[player_id].continue_running){
             PLAYERS[player_id].continue_running = false;    //blocking self untill next cycle turn
             pthread_mutex_lock(&turnMutex);
-            while(PLAYERS[player_id].throwDice());
-            PLAYERS[player_id].playerDetails();
+            playerturn.setTexture(&PLAYERS[player_id].tokenTexture);
+            while(PLAYERS[player_id].throwDice(&DICE));
+            // PLAYERS[player_id].playerDetails();
+            int ch;
+            cin>>ch;
             Cycle++;
             pthread_mutex_unlock(&turnMutex);
         }
@@ -374,7 +371,7 @@ void* turn(void* arg){
 
 void *MasterThread(void*){
     while(true){
-        if(Cycle==4){
+        if(Cycle==NO_PLAYERS){
             Cycle=0;
             cout<<"Cycle Completed"<<endl;
             for(int i=0; i<NO_PLAYERS; ++i)

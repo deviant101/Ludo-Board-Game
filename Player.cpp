@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 using namespace std;
 
+sf::Texture diceTexture;
+
 class Player{
     public:
         string color;
@@ -48,7 +50,7 @@ class Player{
             else if(color == "Yellow"){
                 tokenTexture.loadFromFile("images/diamond_tkn.png");
             }
-            homeGrids[0].setTexture(&tokenTexture);
+            // homeGrids[0].setTexture(&tokenTexture);
         }
 
         void playerDetails(){
@@ -60,9 +62,14 @@ class Player{
             for(int i=0; i<numTokens; ++i)
                 cout<<tokenPosition[i]<<" "<<tokenDistance[i]<<endl;
         }
-        bool throwDice(){
+        bool throwDice(sf::RectangleShape *dice){
             int val=(rand()%6)+1;
             diceValues.push_back(val);
+            
+            diceTexture.loadFromFile("images/dice-"+to_string(val)+".png");
+            dice->setTexture(&diceTexture);
+            cout<<"Dice value: "<<val<<endl;
+            
             if(val==6)
                 return true;
             else
