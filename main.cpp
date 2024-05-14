@@ -13,7 +13,9 @@ sf::RectangleShape redHome[5];
 sf::RectangleShape blueHome[5];
 sf::RectangleShape yellowHome[5];
 sf::RectangleShape DICE(sf::Vector2f(150,150));
+sf::Texture shuffleDiceTexture;
 sf::RectangleShape playerturn(sf::Vector2f(90,90));
+sf::RenderWindow mainWindow;
 
 sf::RectangleShape *playerHomes[4]={redHome, greenHome, blueHome, yellowHome};
 
@@ -39,12 +41,13 @@ int main(){
     srand(time(0));
     mainFont.loadFromFile("fonts/SalvarRegular-gxwoP.ttf");
     secFont.loadFromFile("fonts/AAbsoluteEmpire-EaXpg.ttf");
+    shuffleDiceTexture.loadFromFile("images/dice.png");
     
     inputWindow();
     initialize();
 
-    sf::RenderWindow window(sf::VideoMode(1100, 750), "Ludo-Board Game");
-    window.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - window.getSize().x / 2, sf::VideoMode::getDesktopMode().height / 2 - window.getSize().y / 2));
+    mainWindow.create(sf::VideoMode(1100, 750), "Ludo-Board Game");
+    mainWindow.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - mainWindow.getSize().x / 2, sf::VideoMode::getDesktopMode().height / 2 - mainWindow.getSize().y / 2));
 
     // Create four rectangles representing clickable playGroundGrids
     // Red Area
@@ -172,15 +175,15 @@ int main(){
     pthread_t masterThreadId;
     pthread_create(&masterThreadId, NULL, MasterThread, NULL);
 
-    while (window.isOpen()) {
+    while (mainWindow.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event)) {
+        while (mainWindow.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
-                window.close();
+                mainWindow.close();
             else if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     // Check if the mouse click is within any of the playGroundGrids
-                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow);
                     if (Heart.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
                         cout << "Square 1 clicked!" << endl;
                     } else if (Spade.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
@@ -194,35 +197,35 @@ int main(){
             }
         }
 
-        window.clear(sf::Color::White);
+        mainWindow.clear(sf::Color::White);
 
         // Draw the playGroundGrids
-        window.draw(Heart);
-        window.draw(Spade);
-        window.draw(Club);
-        window.draw(Diamond);
-        window.draw(DICE);
-        window.draw(playerturn);
+        mainWindow.draw(Heart);
+        mainWindow.draw(Spade);
+        mainWindow.draw(Club);
+        mainWindow.draw(Diamond);
+        mainWindow.draw(DICE);
+        mainWindow.draw(playerturn);
 
-        window.draw(center);
+        mainWindow.draw(center);
 
         for(int i = 0; i < 52; ++i){
-            window.draw(playGroundGrids[i]);
+            mainWindow.draw(playGroundGrids[i]);
         }
 
         for(int i = 0; i < 5; ++i){
-            window.draw(greenHome[i]);
-            window.draw(redHome[i]);
-            window.draw(blueHome[i]);
-            window.draw(yellowHome[i]);
+            mainWindow.draw(greenHome[i]);
+            mainWindow.draw(redHome[i]);
+            mainWindow.draw(blueHome[i]);
+            mainWindow.draw(yellowHome[i]);
         }
 
-        window.draw(heartSym);
-        window.draw(diamondSym);
-        window.draw(spadeSym);
-        window.draw(clubSym);
+        mainWindow.draw(heartSym);
+        mainWindow.draw(diamondSym);
+        mainWindow.draw(spadeSym);
+        mainWindow.draw(clubSym);
         
-        window.display();
+        mainWindow.display();
     }
     // Join the threads
     for (int i = 0; i < NO_PLAYERS; ++i)
@@ -355,14 +358,40 @@ void* turn(void* arg){
     delete (int*)arg;
     while(true){
         while(PLAYERS[player_id].continue_running){
+
             PLAYERS[player_id].continue_running = false;    //blocking self untill next cycle turn
+            
             pthread_mutex_lock(&turnMutex);
+            
+            DICE.setTexture(&shuffleDiceTexture);
             playerturn.setTexture(&PLAYERS[player_id].tokenTexture);
-            while(PLAYERS[player_id].throwDice(&DICE));
-            // PLAYERS[player_id].playerDetails();
+            
+            while(mainWindow.isOpen()){
+                sf::Event event;
+                bool flag = false;
+                while (mainWindow.pollEvent(event)) {
+                    if (event.type == sf::Event::MouseButtonPressed) {
+                        if (event.mouseButton.button == sf::Mouse::Left) {
+                            sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow);
+                            if (DICE.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
+                                while(PLAYERS[player_id].throwDice(&DICE));
+                                flag = true;
+                            }
+                        }
+                    }
+                }
+                if(flag)
+                    break;
+            }
+
+            
+
             int ch;
+            cout<<"Enter";
             cin>>ch;
+            
             Cycle++;
+            
             pthread_mutex_unlock(&turnMutex);
         }
     }
