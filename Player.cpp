@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <SFML/Graphics.hpp>
+#include "global.cpp"
 using namespace std;
 
 sf::Texture diceTexture;
@@ -15,26 +16,34 @@ class Player{
         int startingPoint;
         bool continue_running;  //this will be used as mutex for the player self
         sf::Texture tokenTexture;
-        sf::Sprite tokenSprite;
+        sf::RectangleShape symbolArea;
+        
 
         vector<int> diceValues;  // Store the current dice rolls for the player
+        int* tokenNumber;
+        int nextToken;
 
         sf::RectangleShape *homeGrids;
 
-        void initializePlayer(string color, int numTkn, int start, sf::RectangleShape *hmGrids){
+        void initializePlayer(string color, int numTkn, int start, sf::RectangleShape *hmGrids, sf::RectangleShape *sym){
             this->color = color;
             numTurns = 0;
             killCount = 0;
             numTokens = numTkn;
             tokenPosition = new int[numTokens];
             tokenDistance = new int[numTokens];
+            tokenNumber = new int[numTokens];
             startingPoint = start;
+            symbolArea = *sym;
             
             for(int i = 0; i < numTokens; i++){
                 this->tokenPosition[i] = -1;
-                this->tokenDistance[i] = 0;
+                this->tokenDistance[i] = -1;
+                this->tokenNumber[i] = i;
+
             }
             continue_running = true;
+            nextToken = 0;
             
             homeGrids = hmGrids;
 
@@ -62,17 +71,18 @@ class Player{
             for(int i=0; i<numTokens; ++i)
                 cout<<tokenPosition[i]<<" "<<tokenDistance[i]<<endl;
         }
-        bool throwDice(sf::RectangleShape *dice){
+        int throwDice(){
             int val=(rand()%6)+1;
             diceValues.push_back(val);
             
-            diceTexture.loadFromFile("images/dice-"+to_string(val)+".png");
-            dice->setTexture(&diceTexture);
-            cout<<"Dice value: "<<val<<endl;
-            
-            if(val==6)
-                return true;
-            else
-                return false;
+            return val;
+        }
+
+        void withdrawToken(){
+            if(tokenPosition[tokenNumber[nextToken]] == -1 && tokenDistance[tokenNumber[nextToken]] == -1){
+                tokenPosition[tokenNumber[nextToken]] = startingPoint;
+                tokenDistance[tokenNumber[nextToken]] = 0;
+                nextToken++;
+            }
         }
 };

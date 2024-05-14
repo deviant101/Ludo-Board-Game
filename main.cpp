@@ -4,37 +4,17 @@
 #include <bits/stdc++.h>
 #include <semaphore.h>
 #include "Player.cpp"
+#include "global.cpp"
 using namespace std;
 
-// Create the playGroundGrids
-sf::RectangleShape playGroundGrids[52];
-sf::RectangleShape greenHome[5];
-sf::RectangleShape redHome[5];
-sf::RectangleShape blueHome[5];
-sf::RectangleShape yellowHome[5];
-sf::RectangleShape DICE(sf::Vector2f(150,150));
-sf::Texture shuffleDiceTexture;
-sf::RectangleShape playerturn(sf::Vector2f(90,90));
-sf::RenderWindow mainWindow;
-
-sf::RectangleShape *playerHomes[4]={redHome, greenHome, blueHome, yellowHome};
-
-sf::Font mainFont;
-sf::Font secFont;
-
-int NO_PLAYERS;
-int NO_TOKENS;
-int Cycle = 0;
-
 Player *PLAYERS;
-
-pthread_mutex_t turnMutex;
 
 void inputWindow();
 void drawHomeGrids(sf::RectangleShape *homeGrid, string color);
 void initialize();
 void *turn(void* arg);
 void *MasterThread(void*);
+void fillDiceTexture(int val);
 
 int main(){
 
@@ -54,7 +34,6 @@ int main(){
     sf::RectangleShape Heart(sf::Vector2f(300, 300));
     Heart.setFillColor(sf::Color(228,28,36,255));
     Heart.setPosition(0, 0);
-    sf::RectangleShape heartSym(sf::Vector2f(200, 200));
     sf::Texture redTexture;
     if (redTexture.loadFromFile("images/red_heart.png")) {
         heartSym.setTexture(&redTexture);
@@ -65,7 +44,6 @@ int main(){
     sf::RectangleShape Spade(sf::Vector2f(300, 300));
     Spade.setFillColor(sf::Color(98,180,70,255));
     Spade.setPosition(450, 0);
-    sf::RectangleShape spadeSym(sf::Vector2f(200, 200));
     sf::Texture greenTexture;
     if (greenTexture.loadFromFile("images/green_spade.png")) {
         spadeSym.setTexture(&greenTexture);
@@ -76,7 +54,6 @@ int main(){
     sf::RectangleShape Club(sf::Vector2f(300, 300));
     Club.setFillColor(sf::Color(30,112,185,255));
     Club.setPosition(0, 450);
-    sf::RectangleShape clubSym(sf::Vector2f(200, 200));
     sf::Texture blueTexture;
     if (blueTexture.loadFromFile("images/blue_club.png")) {
         clubSym.setTexture(&blueTexture);
@@ -87,7 +64,6 @@ int main(){
     sf::RectangleShape Diamond(sf::Vector2f(300, 300));
     Diamond.setFillColor(sf::Color(254,205,7,255));
     Diamond.setPosition(450, 450);
-    sf::RectangleShape diamondSym(sf::Vector2f(200, 200));
     sf::Texture yellowTexture;
     if (yellowTexture.loadFromFile("images/yellow_diamond.png")) {
         diamondSym.setTexture(&yellowTexture);
@@ -350,7 +326,7 @@ void initialize(){
     string colors[4] = {"Red", "Green", "Blue", "Yellow"};
     int starts[4] = {40, 1, 27, 14};
     for(int i=0; i<NO_PLAYERS; ++i){
-        PLAYERS[i].initializePlayer(colors[i], NO_TOKENS, starts[i], playerHomes[i]);
+        PLAYERS[i].initializePlayer(colors[i], NO_TOKENS, starts[i], playerHomes[i], &SymbolArray[i]);
     }
 }
 void* turn(void* arg){
@@ -369,13 +345,26 @@ void* turn(void* arg){
             while(mainWindow.isOpen()){
                 sf::Event event;
                 bool flag = false;
+
                 while (mainWindow.pollEvent(event)) {
                     if (event.type == sf::Event::MouseButtonPressed) {
                         if (event.mouseButton.button == sf::Mouse::Left) {
                             sf::Vector2i mousePos = sf::Mouse::getPosition(mainWindow);
                             if (DICE.getGlobalBounds().contains(mousePos.x, mousePos.y)) {
-                                while(PLAYERS[player_id].throwDice(&DICE));
-                                flag = true;
+
+                                while(true){    //throwing dice
+                                    int val=PLAYERS[player_id].throwDice();
+                                    fillDiceTexture(val);
+
+                                    if(val==6){
+                                        break;
+                                    }
+                                    else{
+                                        flag = true;
+                                        break;
+                                    }
+                                }
+                                
                             }
                         }
                     }
@@ -408,4 +397,9 @@ void *MasterThread(void*){
         }
     }
     return NULL;
+}
+void fillDiceTexture(int val){
+    diceTexture.loadFromFile("images/dice-"+to_string(val)+".png");
+    DICE.setTexture(&diceTexture);
+    cout<<"Dice value: "<<val<<endl;
 }
