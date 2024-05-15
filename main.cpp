@@ -207,8 +207,10 @@ int main(){
         mainWindow.display();
     }
     // Join the threads
-    for (int i = 0; i < NO_PLAYERS; ++i)
+    for (int i = 0; i < NO_PLAYERS; ++i){
         pthread_join(playerThreads[i], NULL);
+    }
+    pthread_join(masterThreadId, NULL);
 
     return 0;
 }
