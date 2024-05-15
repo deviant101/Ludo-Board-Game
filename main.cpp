@@ -408,22 +408,18 @@ void fillDiceTexture(int val){
     DICE.setTexture(&diceTexture);
 }
 
-void fillOnBoard(){
-    for(int i=0; i<NO_PLAYERS; ++i){
-        for(int j=0; j<NO_TOKENS; ++j){
-            if(PLAYERS[i].tokenPosition[j]!=-1){
+void fillOnBoard() {
+    // Clear all positions on the board
+    for (int i = 0; i < 52; ++i) {
+        playGroundGrids[i].setTexture(nullptr);
+    }
+
+    // Iterate over all players and tokens to set the texture for the new position
+    for (int i = 0; i < NO_PLAYERS; ++i) {
+        for (int j = 0; j < NO_TOKENS; ++j) {
+            if (PLAYERS[i].tokenPosition[j] != -1) {
                 playGroundGrids[PLAYERS[i].tokenPosition[j]].setTexture(&PLAYERS[i].tokenTexture);
             }
         }
     }
 }
-
-// void fill(){
-//     for(int i=0; i<NO_PLAYERS; ++i){
-//         for(int j=0; j<NO_TOKENS; ++j){
-//             if(PLAYERS[i].tokenPosition[j]!=PLAYERS[i].startingPoint){
-//                 playGroundGrids[PLAYERS[i].tokenPosition[j]].setTexture(&PLAYERS[i].tokenTexture);
-//             }
-//         }
-//     }
-// }

@@ -114,54 +114,49 @@ class Player{
             cout<<endl;
         }
 
-        void selectTokenNumber(int dvalue){
-
+        void selectTokenNumber(int dvalue) {
             printTokenPositions();
-            if(dvalue==6){
-                while(true){
-
+            if (dvalue == 6) {
+                while (true) {
                     int tokenIndex;
-                    cout<<"Enter the token number: ";
-                    cin>>tokenIndex;
-                    
-                    if(tokenIndex < numTokens){
-                        if(tokenPosition[tokenIndex] == -1 && tokenDistance[tokenIndex] == -1){
+                    cout << "Enter the token number: ";
+                    cin >> tokenIndex;
+                    if (tokenIndex < numTokens) {
+                        if (tokenPosition[tokenIndex] == -1 && tokenDistance[tokenIndex] == -1) {
                             tokenDistance[tokenIndex] = 0;
                             tokenPosition[tokenIndex] = startingPoint;
                             break;
-                        }
-                        else{
+                        } else {
+                            // Update the old position to null texture value
+                            playGroundGrids[tokenPosition[tokenIndex]].setTexture(nullptr);
                             moveToken(tokenIndex, dvalue);
                             break;
                         }
-                    }
-                    else{
-                        cout<<"Invalid token number"<<endl;
+                    } else {
+                        cout << "Invalid token number" << endl;
                     }
                 }
-            }
-            else{       // If the dice value is not 6
-                while(true){
-
+            } else { // If the dice value is not 6
+                while (true) {
                     int tokenIndex;
-                    cout<<"Enter the token number: ";
-                    cin>>tokenIndex;
-
-                    if(tokenCheckInPlay(tokenIndex)){
-                        if(tokenDistance[tokenIndex] + dvalue <= 51){
+                    cout << "Enter the token number: ";
+                    cin >> tokenIndex;
+                    if (tokenCheckInPlay(tokenIndex)) {
+                        if (tokenDistance[tokenIndex] + dvalue <= 51) {
+                            // Update the old position to null texture value
+                            playGroundGrids[tokenPosition[tokenIndex]].setTexture(nullptr);
                             moveToken(tokenIndex, dvalue);
                             break;
+                        } else {
+                            cout << "Token " << tokenIndex << " cannot move " << dvalue << " steps. It will exceed the board limit." << endl;
                         }
-                        else{
-                            cout<<"Token "<<tokenIndex<<" cannot move "<<dvalue<<" steps. It will exceed the board limit."<<endl;
-                        }
-                    }
-                    else{
-                        cout<<"You need a 6 to start the token"<<endl;
+                    } else {
+                        cout << "You need a 6 to start the token" << endl;
                     }
                 }
             }
         }
+
 
         void moveToken(int tokenNumber, int distance){
             playGroundGrids[tokenPosition[tokenNumber]].setTexture(NULL);
