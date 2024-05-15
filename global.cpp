@@ -12,6 +12,11 @@ sf::Texture shuffleDiceTexture;
 sf::RectangleShape playerturn(sf::Vector2f(90,90));
 sf::RenderWindow mainWindow;
 
+sf::Text Name1;
+sf::Text Name2;
+sf::Text Name3;
+sf::Text Devs;
+
 sf::RectangleShape *playerHomes[4]={redHome, greenHome, blueHome, yellowHome};
 
 sf::RectangleShape heartSym(sf::Vector2f(200, 200));
@@ -24,6 +29,7 @@ sf::Texture greenstop;
 sf::Texture redstop;
 sf::Texture yellowstop;
 sf::Texture bluestop;
+
 
 
 sf::Font mainFont;

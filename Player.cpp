@@ -158,7 +158,17 @@ class Player{
         }
 
 
-        void moveToken(int tokenNumber, int distance){
+        void moveToken(int tokenNumber, int distance){  // 50
+            if(tokenDistance[tokenNumber] + distance >= 50 && tokenDistance[tokenNumber] + distance <= 55 && killCount > 0){
+                tokenDistance[tokenNumber] += distance;
+                homeGrids[distance].setTexture(&tokenTexture);
+                return;
+            }
+            if(tokenDistance[tokenNumber] >= 56 && killCount > 0){
+                tokenDistance[tokenNumber] = -100;
+                tokenPosition[tokenNumber] = -100;
+                return;
+            }
             playGroundGrids[tokenPosition[tokenNumber]].setTexture(NULL);
             tokenPosition[tokenNumber] = (tokenPosition[tokenNumber]+distance)%52;
             tokenDistance[tokenNumber] += distance;

@@ -18,6 +18,8 @@ void fillDiceTexture(int val);
 void fillOnBoard();
 void killCheck(int currentPlayer);
 
+void printDevNames();
+
 int main(){
 
     srand(time(0));
@@ -27,6 +29,7 @@ int main(){
     
     inputWindow();
     initialize();
+    printDevNames();
 
     mainWindow.create(sf::VideoMode(1100, 750), "Ludo-Board Game");
     mainWindow.setPosition(sf::Vector2i(sf::VideoMode::getDesktopMode().width / 2 - mainWindow.getSize().x / 2, sf::VideoMode::getDesktopMode().height / 2 - mainWindow.getSize().y / 2));
@@ -195,6 +198,11 @@ int main(){
         mainWindow.draw(diamondSym);
         mainWindow.draw(spadeSym);
         mainWindow.draw(clubSym);
+
+        mainWindow.draw(Name1);
+        mainWindow.draw(Name2);
+        mainWindow.draw(Name3);
+        mainWindow.draw(Devs);
         
         mainWindow.display();
     }
@@ -452,4 +460,31 @@ void killCheck(int currentPlayer){
             }
         }
     }
+}
+
+void printDevNames(){
+
+    Devs.setFont(mainFont); 
+    Devs.setString("DEVS");
+    Devs.setCharacterSize(70);
+    Devs.setFillColor(sf::Color::Black);
+    Devs.setPosition(820, 370);
+
+    Name1.setFont(secFont);
+    Name1.setString("IDR33S");
+    Name1.setCharacterSize(40);
+    Name1.setFillColor(sf::Color::Black);
+    Name1.setPosition(850, 475);
+
+    Name2.setFont(secFont);
+    Name2.setString("N4M33R");
+    Name2.setCharacterSize(40);
+    Name2.setFillColor(sf::Color::Black);
+    Name2.setPosition(835, 545);
+
+    Name3.setFont(secFont);
+    Name3.setString("F4RRUKH");
+    Name3.setCharacterSize(40);
+    Name3.setFillColor(sf::Color::Black);
+    Name3.setPosition(825, 615);
 }
