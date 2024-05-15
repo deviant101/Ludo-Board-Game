@@ -15,6 +15,7 @@ void initialize();
 void *turn(void* arg);
 void *MasterThread(void*);
 void fillDiceTexture(int val);
+void fillOnBoard();
 
 int main(){
 
@@ -401,10 +402,21 @@ void *MasterThread(void*){
             for(int i=0; i<NO_PLAYERS; ++i)
                 PLAYERS[i].continue_running = true;
         }
+        fillOnBoard();
     }
     return NULL;
 }
 void fillDiceTexture(int val){
     diceTexture.loadFromFile("images/dice-"+to_string(val)+".png");
     DICE.setTexture(&diceTexture);
+}
+
+void fillOnBoard(){
+    for(int i=0; i<NO_PLAYERS; ++i){
+        for(int j=0; j<NO_TOKENS; ++j){
+            if(PLAYERS[i].tokenPosition[j]!=-1){
+                playGroundGrids[PLAYERS[i].tokenPosition[j]].setTexture(&PLAYERS[i].tokenTexture);
+            }
+        }
+    }
 }

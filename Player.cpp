@@ -165,6 +165,7 @@ class Player{
         }
 
         void moveToken(int tokenNumber, int distance){
+            playGroundGrids[tokenPosition[tokenNumber]].setTexture(NULL);
             tokenPosition[tokenNumber] = (tokenPosition[tokenNumber]+distance)%52;
             tokenDistance[tokenNumber] += distance;
         }
