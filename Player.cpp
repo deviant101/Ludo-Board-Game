@@ -86,27 +86,26 @@ class Player{
             cout<<endl;
         }
 
-        int selectDiceValue(){
-
+        int selectDiceValue() {
             printDiceValues();
-            while(true){
+            while (true) {
+                if (diceValues.empty()) {
+                    cout << "No valid dice values left." << endl;
+                    return -1;
+                }
                 int val;
-                cout<<"Enter the dice value: ";
-                cin>>val;
-                for(int i=0; i<diceValues.size(); ++i){
-                    if(diceValues[i] == val)
+                cout << "Enter the dice value: ";
+                cin >> val;
+                for (int i = 0; i < diceValues.size(); ++i) {
+                    if (diceValues[i] == val) {
                         diceValues.erase(diceValues.begin() + i);
                         return val;
+                    }
                 }
-                if(diceValues.empty()){
-                    break;
-                }
-                else{
-                    cout<<"Invalid dice value"<<endl;
-                }
+                cout << "Invalid dice value" << endl;
             }
-            return -1;
         }
+
 
         void printTokenPositions(){
             cout<<color<<" Token Positions:"<<endl;

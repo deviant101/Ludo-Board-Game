@@ -73,10 +73,6 @@ int main(){
 
     DICE.setFillColor(sf::Color::Black);
     DICE.setPosition(850, 50);
-    // sf::Texture diceTexture;
-    // if(diceTexture.loadFromFile("images/dice.png")){
-    //     DICE.setTexture(&diceTexture);
-    // }
 
     playerturn.setPosition(880, 250);
 
@@ -377,11 +373,12 @@ void* turn(void* arg){
             if (PLAYERS[player_id].hasSix() || PLAYERS[player_id].checkInPlay()) {
                 while (true) {
                     int dval = PLAYERS[player_id].selectDiceValue();
-                    if(dval==-1)
+                    if (dval == -1)
                         break;
                     PLAYERS[player_id].selectTokenNumber(dval);
                 }
             }
+
 
             if(!PLAYERS[player_id].diceValues.empty())
                 PLAYERS[player_id].diceValues.clear();
@@ -420,3 +417,13 @@ void fillOnBoard(){
         }
     }
 }
+
+// void fill(){
+//     for(int i=0; i<NO_PLAYERS; ++i){
+//         for(int j=0; j<NO_TOKENS; ++j){
+//             if(PLAYERS[i].tokenPosition[j]!=PLAYERS[i].startingPoint){
+//                 playGroundGrids[PLAYERS[i].tokenPosition[j]].setTexture(&PLAYERS[i].tokenTexture);
+//             }
+//         }
+//     }
+// }
