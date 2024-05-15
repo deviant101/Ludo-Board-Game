@@ -28,6 +28,4 @@ int NO_PLAYERS;
 int NO_TOKENS;
 int Cycle = 0;
 
-// Player *PLAYERS;
-
 pthread_mutex_t turnMutex;

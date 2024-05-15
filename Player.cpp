@@ -17,7 +17,6 @@ class Player{
         bool continue_running;  //this will be used as mutex for the player self
         sf::Texture tokenTexture;
         sf::RectangleShape symbolArea;
-        
 
         vector<int> diceValues;  // Store the current dice rolls for the player
         int* tokenNumber;
@@ -71,6 +70,7 @@ class Player{
             for(int i=0; i<numTokens; ++i)
                 cout<<tokenPosition[i]<<" "<<tokenDistance[i]<<endl;
         }
+
         int throwDice(){
             int val=(rand()%6)+1;
             diceValues.push_back(val);
@@ -78,11 +78,115 @@ class Player{
             return val;
         }
 
-        void withdrawToken(){
-            if(tokenPosition[tokenNumber[nextToken]] == -1 && tokenDistance[tokenNumber[nextToken]] == -1){
-                tokenPosition[tokenNumber[nextToken]] = startingPoint;
-                tokenDistance[tokenNumber[nextToken]] = 0;
-                nextToken++;
+        void printDiceValues(){
+            cout<<endl;
+            cout<<color<<" Dice Values : ";
+            for(int i=0; i<diceValues.size(); ++i)
+                cout<<diceValues[i]<<" ";
+            cout<<endl;
+        }
+
+        int selectDiceValue(){
+
+            printDiceValues();
+            while(true){
+                int val;
+                cout<<"Enter the dice value: ";
+                cin>>val;
+                for(int i=0; i<diceValues.size(); ++i){
+                    if(diceValues[i] == val)
+                        diceValues.erase(diceValues.begin() + i);
+                        return val;
+                }
+                if(diceValues.empty()){
+                    break;
+                }
+                else{
+                    cout<<"Invalid dice value"<<endl;
+                }
             }
+            return -1;
+        }
+
+        void printTokenPositions(){
+            cout<<color<<" Token Positions:"<<endl;
+            for(int i=0; i<numTokens; ++i)
+                cout<<"Token "<<i<<" "<<tokenDistance[i]<<endl;
+            cout<<endl;
+        }
+
+        void selectTokenNumber(int dvalue){
+
+            printTokenPositions();
+            if(dvalue==6){
+                while(true){
+
+                    int tokenIndex;
+                    cout<<"Enter the token number: ";
+                    cin>>tokenIndex;
+                    
+                    if(tokenIndex < numTokens){
+                        if(tokenPosition[tokenIndex] == -1 && tokenDistance[tokenIndex] == -1){
+                            tokenDistance[tokenIndex] = 0;
+                            tokenPosition[tokenIndex] = startingPoint;
+                            break;
+                        }
+                        else{
+                            moveToken(tokenIndex, dvalue);
+                            break;
+                        }
+                    }
+                    else{
+                        cout<<"Invalid token number"<<endl;
+                    }
+                }
+            }
+            else{       // If the dice value is not 6
+                while(true){
+
+                    int tokenIndex;
+                    cout<<"Enter the token number: ";
+                    cin>>tokenIndex;
+
+                    if(tokenCheckInPlay(tokenIndex)){
+                        if(tokenDistance[tokenIndex] + dvalue <= 51){
+                            moveToken(tokenIndex, dvalue);
+                            break;
+                        }
+                        else{
+                            cout<<"Token "<<tokenIndex<<" cannot move "<<dvalue<<" steps. It will exceed the board limit."<<endl;
+                        }
+                    }
+                    else{
+                        cout<<"You need a 6 to start the token"<<endl;
+                    }
+                }
+            }
+        }
+
+        void moveToken(int tokenNumber, int distance){
+            tokenPosition[tokenNumber] = (tokenPosition[tokenNumber]+distance)%52;
+            tokenDistance[tokenNumber] += distance;
+        }
+
+        bool checkInPlay(){
+            for(int i=0; i<numTokens; ++i){
+                if(tokenPosition[i] != -1 && tokenDistance[i] != -1)
+                    return true;
+            }
+            return false;
+        }
+
+        bool hasSix(){
+            for(int i=0; i<diceValues.size(); ++i){
+                if(diceValues[i] == 6)
+                    return true;
+            }
+            return false;
+        }
+        bool tokenCheckInPlay(int tokenNumber){
+            if(tokenPosition[tokenNumber] != -1 && tokenDistance[tokenNumber] != -1)
+                return true;
+            return false;
         }
 };

@@ -373,11 +373,17 @@ void* turn(void* arg){
                     break;
             }
 
-            
+            if (PLAYERS[player_id].hasSix() || PLAYERS[player_id].checkInPlay()) {
+                while (true) {
+                    int dval = PLAYERS[player_id].selectDiceValue();
+                    if(dval==-1)
+                        break;
+                    PLAYERS[player_id].selectTokenNumber(dval);
+                }
+            }
 
-            int ch;
-            cout<<"Enter";
-            cin>>ch;
+            if(!PLAYERS[player_id].diceValues.empty())
+                PLAYERS[player_id].diceValues.clear();
             
             Cycle++;
             
@@ -401,5 +407,4 @@ void *MasterThread(void*){
 void fillDiceTexture(int val){
     diceTexture.loadFromFile("images/dice-"+to_string(val)+".png");
     DICE.setTexture(&diceTexture);
-    cout<<"Dice value: "<<val<<endl;
 }
