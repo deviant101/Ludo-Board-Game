@@ -20,6 +20,11 @@ sf::RectangleShape clubSym(sf::Vector2f(200, 200));
 sf::RectangleShape diamondSym(sf::Vector2f(200, 200));
 sf::RectangleShape SymbolArray[4] = {heartSym, spadeSym, clubSym, diamondSym};
 
+sf::Texture greenstop;
+sf::Texture redstop;
+sf::Texture yellowstop;
+sf::Texture bluestop;
+
 
 sf::Font mainFont;
 sf::Font secFont;

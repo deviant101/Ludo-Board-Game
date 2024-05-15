@@ -16,6 +16,7 @@ void *turn(void* arg);
 void *MasterThread(void*);
 void fillDiceTexture(int val);
 void fillOnBoard();
+void killCheck(int currentPlayer);
 
 int main(){
 
@@ -117,19 +118,16 @@ int main(){
 
     // Starting points
     
-    sf::Texture greenstop;
+    
     if (greenstop.loadFromFile("images/greenstop.gif")){
         playGroundGrids[1].setTexture(&greenstop);
     }
-    sf::Texture redstop;
     if (redstop.loadFromFile("images/redstop.gif")){
         playGroundGrids[40].setTexture(&redstop);
     }
-    sf::Texture yellowstop;
     if (yellowstop.loadFromFile("images/yellowstop.gif")){
         playGroundGrids[14].setTexture(&yellowstop);
     }
-    sf::Texture bluestop;
     if (bluestop.loadFromFile("images/bluestop.gif")){
         playGroundGrids[27].setTexture(&bluestop);
     }
@@ -370,6 +368,11 @@ void* turn(void* arg){
                     break;
             }
 
+            if(PLAYERS[player_id].contains3Sixes()){    //if players gets 3 sixes at once
+                PLAYERS[player_id].diceValues.clear();
+                continue;
+            }
+
             if (PLAYERS[player_id].hasSix() || PLAYERS[player_id].checkInPlay()) {
                 while (true) {
                     int dval = PLAYERS[player_id].selectDiceValue();
@@ -378,6 +381,7 @@ void* turn(void* arg){
                     PLAYERS[player_id].selectTokenNumber(dval);
                 }
             }
+            killCheck(player_id);
 
 
             if(!PLAYERS[player_id].diceValues.empty())
@@ -413,12 +417,38 @@ void fillOnBoard() {
     for (int i = 0; i < 52; ++i) {
         playGroundGrids[i].setTexture(nullptr);
     }
+    playGroundGrids[1].setTexture(&greenstop);
+    playGroundGrids[40].setTexture(&redstop);
+    playGroundGrids[14].setTexture(&yellowstop);
+    playGroundGrids[27].setTexture(&bluestop);
+
+    playGroundGrids[35].setFillColor(sf::Color(128, 128, 128));
+    playGroundGrids[9].setFillColor(sf::Color(128, 128, 128));
+    playGroundGrids[22].setFillColor(sf::Color(128, 128, 128));
+    playGroundGrids[48].setFillColor(sf::Color(128, 128, 128));
 
     // Iterate over all players and tokens to set the texture for the new position
     for (int i = 0; i < NO_PLAYERS; ++i) {
         for (int j = 0; j < NO_TOKENS; ++j) {
             if (PLAYERS[i].tokenPosition[j] != -1) {
                 playGroundGrids[PLAYERS[i].tokenPosition[j]].setTexture(&PLAYERS[i].tokenTexture);
+            }
+        }
+    }
+}
+
+void killCheck(int currentPlayer){
+    for(int i=0; i<NO_PLAYERS; ++i){
+        if(i!=currentPlayer){
+            for(int j=0; j<NO_TOKENS; ++j){
+                if(PLAYERS[i].tokenPosition[j] != -1 && PLAYERS[i].tokenPosition[j] == PLAYERS[currentPlayer].tokenPosition[j]){
+                    if(PLAYERS[i].tokenPosition[j]==1 || PLAYERS[i].tokenPosition[j]==14 || PLAYERS[i].tokenPosition[j] == 9 || PLAYERS[i].tokenPosition[j]==27 || PLAYERS[i].tokenPosition[j]==22 ||  PLAYERS[i].tokenPosition[j]==40 || PLAYERS[i].tokenPosition[j]==35 || PLAYERS[i].tokenPosition[j]==48)
+                        continue;
+                    PLAYERS[i].tokenPosition[j] = -1;
+                    PLAYERS[i].tokenDistance[j] = -1;
+                    playGroundGrids[PLAYERS[i].tokenPosition[j]].setTexture(nullptr);
+                    PLAYERS[currentPlayer].killCount++;
+                }
             }
         }
     }

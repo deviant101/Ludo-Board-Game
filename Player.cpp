@@ -184,4 +184,14 @@ class Player{
                 return true;
             return false;
         }
+        bool contains3Sixes(){
+            int count = 0;
+            for(int i=0; i<diceValues.size(); ++i){
+                if(diceValues[i] == 6)
+                    count++;
+            }
+            if(count >= 3)
+                return true;
+            return false;
+        }
 };
